@@ -50,7 +50,7 @@ function HomeScreen() {
 
     return (
         <>  
-            <div className='mt-5'></div>
+            <div className='mt-5 my-3'></div>
             {loading ? (<Loader />) : error ? <></> :<Slider items={diseases}/>}
             
 
