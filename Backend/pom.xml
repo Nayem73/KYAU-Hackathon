@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.javafest</groupId>
-	<artifactId>backend</artifactId>
+	<artifactId>aifarming</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>aifarming</name>
 	<description>detects disease for various crops using AI</description>
