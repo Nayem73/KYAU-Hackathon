@@ -64,9 +64,9 @@ public class PaymentController {
         if (userInfo == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Please login first.");
         }
-        if (userInfo.isSubscribed()) {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("You are already a subscribed user.");
-        }
+//        if (userInfo.isSubscribed()) {
+//            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("You are already a subscribed user.");
+//        }
         String serverUrl = request.getRequestURL().toString().split("/api")[0];
 
         System.out.println("1111111111111111111111111111111111 "+serverUrl);
