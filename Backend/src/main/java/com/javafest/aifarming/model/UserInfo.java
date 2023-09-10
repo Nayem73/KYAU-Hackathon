@@ -71,7 +71,14 @@ public class UserInfo {
             orphanRemoval = true,
             cascade = CascadeType.ALL
     )
-    private List<UserAdvertisement> userPayments;
+    private List<UserAdvertisement> userAdvertisements;
+
+    @OneToMany(
+            mappedBy = "userInfo",
+            orphanRemoval = true,
+            cascade = CascadeType.ALL
+    )
+    private List<Notice> notices;
 
     @OneToMany(
             mappedBy = "userInfo",

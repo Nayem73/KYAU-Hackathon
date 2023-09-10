@@ -54,6 +54,7 @@ public class UserAdvertisementController {
             //res.put("img", userAdvertisement.getImg());
             res.put("userName", userAdvertisement.getUserInfo().getUserName());
             res.put("title", userAdvertisement.getTitle());
+            res.put("price", userAdvertisement.getPrice());
 
             response.add(res);
         }
@@ -66,6 +67,7 @@ public class UserAdvertisementController {
     public ResponseEntity<Map<String, Object>> addUserAdvertisement(
             @RequestParam("title") String title,
             @RequestParam("description") String text,
+            @RequestParam("price") Long price,
             Authentication authentication
     ) throws IOException {
 
@@ -88,7 +90,7 @@ public class UserAdvertisementController {
 
         LocalDateTime curDateTime = LocalDateTime.now();
 
-        UserAdvertisement userAdvertisement = new UserAdvertisement(title, text, curDateTime, userInfo);
+        UserAdvertisement userAdvertisement = new UserAdvertisement(title, text, price, curDateTime, userInfo);
         userAdvertisementRepository.save(userAdvertisement);
 
         Map<String, Object> response = new LinkedHashMap<>();
@@ -101,6 +103,7 @@ public class UserAdvertisementController {
         response.put("description", userAdvertisement.getDescription());
         response.put("userName", userAdvertisement.getUserInfo().getUserName());
         response.put("title", userAdvertisement.getTitle());
+        response.put("price", userAdvertisement.getPrice());
 
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)

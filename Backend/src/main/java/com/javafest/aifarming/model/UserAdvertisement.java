@@ -6,8 +6,8 @@ import java.time.LocalDateTime;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
-@Entity(name = "UserPayment")
-@Table(name = "user_payment")
+@Entity(name = "UserAdvertisement")
+@Table(name = "user_advertisement")
 public class UserAdvertisement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,6 +16,7 @@ public class UserAdvertisement {
             updatable = false
     )
     private Long id;
+    private Long price;
     private String title;
     private String description;
     private LocalDateTime localDateTime;
@@ -26,7 +27,7 @@ public class UserAdvertisement {
             referencedColumnName = "id",
             nullable = false,
             foreignKey = @ForeignKey(
-                    name = "user_advertisement_foreign_key"
+                    name = "user_advertisements_foreign_key"
             )
     )
     private UserInfo userInfo;
@@ -34,15 +35,24 @@ public class UserAdvertisement {
     public UserAdvertisement() {
     }
 
-    public UserAdvertisement(String title, String description, LocalDateTime localDateTime, UserInfo userInfo) {
+    public UserAdvertisement(String title, String description, Long price, LocalDateTime localDateTime, UserInfo userInfo) {
         this.description = description;
         this.localDateTime = localDateTime;
         this.userInfo = userInfo;
         this.title = title;
+        this.price = price;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public Long getPrice() {
+        return price;
+    }
+
+    public void setPrice(Long price) {
+        this.price = price;
     }
 
     public String getTitle() {
