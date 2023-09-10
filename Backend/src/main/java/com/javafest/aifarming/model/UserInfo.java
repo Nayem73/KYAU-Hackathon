@@ -66,6 +66,12 @@ public class UserInfo {
             cascade = CascadeType.ALL
     )
     private List<UserReview> userReviews;
+    @OneToMany(
+            mappedBy = "userInfo",
+            orphanRemoval = true,
+            cascade = CascadeType.ALL
+    )
+    private List<UserAdvertisement> userPayments;
 
     @OneToMany(
             mappedBy = "userInfo",
