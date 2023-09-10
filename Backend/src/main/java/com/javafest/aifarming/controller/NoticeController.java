@@ -1,8 +1,8 @@
 package com.javafest.aifarming.controller;
 
-import com.javafest.aifarming.model.UserAdvertisement;
+import com.javafest.aifarming.model.Notice;
 import com.javafest.aifarming.model.UserInfo;
-import com.javafest.aifarming.repository.UserAdvertisementRepository;
+import com.javafest.aifarming.repository.NoticeRepository;
 import com.javafest.aifarming.repository.UserInfoRepository;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
@@ -10,64 +10,60 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
-public class UserAdvertisementController {
-    private final UserAdvertisementRepository userAdvertisementRepository;
+public class NoticeController {
+    private final NoticeRepository noticeRepository;
     private final UserInfoRepository userInfoRepository;
 
-    public UserAdvertisementController(UserAdvertisementRepository userAdvertisementRepository, UserInfoRepository userInfoRepository) {
-        this.userAdvertisementRepository = userAdvertisementRepository;
+    public NoticeController(NoticeRepository noticeRepository, UserInfoRepository userInfoRepository) {
+        this.noticeRepository = noticeRepository;
         this.userInfoRepository = userInfoRepository;
     }
 
-    @GetMapping("/adv/")
-    public ResponseEntity<Page<Map<String, Object>>> getAllUserAdvertisements(
+    @GetMapping("/notice/")
+    public ResponseEntity<Page<Map<String, Object>>> getAllNotices(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
 //        Pageable pageable = PageRequest.of(page, size);
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
-        Page<UserAdvertisement> userAdvertisementPage = userAdvertisementRepository.findAll(pageable);
+        Page<Notice> noticePage = noticeRepository.findAll(pageable);
 
         List<Map<String, Object>> response = new ArrayList<>();
 
-        for (UserAdvertisement userAdvertisement : userAdvertisementPage.getContent()) {
+        for (Notice notice : noticePage.getContent()) {
             Map<String, Object> res = new LinkedHashMap<>();
-            res.put("advertisementId", userAdvertisement.getId());
-            //res.put("created", userAdvertisement.getLocalDateTime());
+            res.put("noticeId", notice.getId());
+            //res.put("created", notice.getLocalDateTime());
             // Format LocalDateTime as a string
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            String formattedDateTime = userAdvertisement.getLocalDateTime().format(formatter);
+            String formattedDateTime = notice.getLocalDateTime().format(formatter);
             res.put("created", formattedDateTime); // Sending AdvertisementDate as a formatted string
-            res.put("description", userAdvertisement.getDescription());
-            //res.put("img", userAdvertisement.getImg());
-            res.put("userName", userAdvertisement.getUserInfo().getUserName());
-            res.put("title", userAdvertisement.getTitle());
-            res.put("price", userAdvertisement.getPrice());
+            res.put("description", notice.getDescription());
+            res.put("userName", notice.getUserInfo().getUserName());
+            res.put("title", notice.getTitle());
 
             response.add(res);
         }
 
         return ResponseEntity.ok()
-                .body(new PageImpl<>(response, pageable, userAdvertisementPage.getTotalElements()));
+                .body(new PageImpl<>(response, pageable, noticePage.getTotalElements()));
     }
 
-    @PostMapping("/adv/")
-    public ResponseEntity<Map<String, Object>> addUserAdvertisement(
+    @PostMapping("/notice/")
+    public ResponseEntity<Map<String, Object>> addnotice(
             @RequestParam("title") String title,
             @RequestParam("description") String text,
-            @RequestParam("price") Long price,
             Authentication authentication
     ) throws IOException {
 
@@ -90,20 +86,19 @@ public class UserAdvertisementController {
 
         LocalDateTime curDateTime = LocalDateTime.now();
 
-        UserAdvertisement userAdvertisement = new UserAdvertisement(title, text, price, curDateTime, userInfo);
-        userAdvertisementRepository.save(userAdvertisement);
+        Notice notice = new Notice(title, text, curDateTime, userInfo);
+        noticeRepository.save(notice);
 
         Map<String, Object> response = new LinkedHashMap<>();
-        response.put("advertisementId", userAdvertisement.getId());
-        //res.put("created", userAdvertisement.getLocalDateTime());
+        response.put("noticeId", notice.getId());
+        //res.put("created", notice.getLocalDateTime());
         // Format LocalDateTime as a string
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formattedDateTime = userAdvertisement.getLocalDateTime().format(formatter);
+        String formattedDateTime = notice.getLocalDateTime().format(formatter);
         response.put("created", formattedDateTime); // Sending AdvertisementDate as a formatted string
-        response.put("description", userAdvertisement.getDescription());
-        response.put("userName", userAdvertisement.getUserInfo().getUserName());
-        response.put("title", userAdvertisement.getTitle());
-        response.put("price", userAdvertisement.getPrice());
+        response.put("description", notice.getDescription());
+        response.put("userName", notice.getUserInfo().getUserName());
+        response.put("title", notice.getTitle());
 
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
