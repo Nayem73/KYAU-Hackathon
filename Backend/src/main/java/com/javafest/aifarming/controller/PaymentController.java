@@ -120,9 +120,10 @@ public class PaymentController {
                 // Save the PaymentInfo object to the database
                 paymentInfoRepository.save(paymentInfo);
 //                return ResponseEntity.ok("Payment successful!");
-                return ResponseEntity.status(HttpStatus.SEE_OTHER)
-                        .header(HttpHeaders.LOCATION, "/profile")
-                        .build();
+//                return ResponseEntity.status(HttpStatus.SEE_OTHER)
+//                        .header(HttpHeaders.LOCATION, "/profile")
+//                        .build();
+                return ResponseEntity.ok("Payment successful!");
             } else {
                 // Payment validation failed
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Payment validation failed");
